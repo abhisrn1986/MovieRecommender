@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Movie Recommender</title>
+        <link rel="stylesheet" href="/static/style.css" />
+    </head>
+    <body>
+        <h1>Hello {{name}} 👋</h1>
+        <h2>This is our lovely little movie recommender</h2>
+        <img src="/static/logo.svg" />
+        <p>Please rate some movies</p>
+        <form action="/recommendations">
+            {% for i in range(3) %}
+            <input
+                type="text"
+                name="title"
+                placeholder="Movie Title"
+                required
+                list="movies"
+            />
+            <input
+                type="range"
+                name="rating"
+                placeholder="Rating (1-5)"
+                min=1
+                max=5
+                required
+            />
+            <br /><br />
+            {% endfor %}
+
+            <button type="submit">Show recommendations</button>
+        </form>
+
+        <datalist id="movies">
+            {% for movie in movies %}
+            <option value="{{movie}}"></option>
+            {% endfor %}
+        </datalist>
+
+        <p>
+            When \(a \ne 0\), there are two solutions to \(ax^2 + bx + c = 0\)
+            and they are \[x = {-b \pm \sqrt{b^2-4ac} \over 2a}.\]
+        </p>
+
+        <script
+            id="MathJax-script"
+            async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+        ></script>
+    </body>
+</html>

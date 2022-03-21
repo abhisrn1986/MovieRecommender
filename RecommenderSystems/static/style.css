@@ -1,0 +1,74 @@
+/* css variables (only works in modern browsers) */
+/* https://caniuse.com/?search=css%20variables */
+:root {
+    --accent-color: deeppink;
+}
+
+body {
+    max-width: 1024px;
+    margin: 40px auto; /* outer spacing, centers our content */
+    padding: 0 20px;
+
+    font-size: 20px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+
+    background-color: lightblue;
+}
+
+input,
+button {
+    font-size: inherit;
+    font-family: inherit;
+
+    padding: 8px; /* inner spacing */
+}
+
+input {
+    outline-color: var(--accent-color);
+}
+
+button {
+    color: var(--accent-color);
+}
+
+a {
+    color: var(--accent-color);
+    transition: all 1s;
+    font-weight: bold;
+    font-style: italic;
+}
+
+a:hover {
+    color: purple;
+}
+
+/* class selector */
+.movies li {
+    padding: 12px;
+}
+
+/* pseudo selectors */
+.movies li:nth-child(odd) {
+    background-color: aqua;
+}
+
+.movies li:nth-child(even) {
+    background-color: aquamarine;
+}
+
+img {
+    /* keep aspect-ratio */
+    /*height: 200px;*/
+    height: 30vh; /* view-height */
+    transition: all 1s;
+}
+
+img:hover {
+    transform: rotate(5deg) scale(1.1);
+    /*filter: blur(10px);*/
+    filter: brightness(50%);
+}
+
+/* responsiveness */
+@media (max-width: 600px) {
+}
