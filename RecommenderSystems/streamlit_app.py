@@ -58,20 +58,22 @@ if delete_movies :
 if submit:
 
     user_rating = get_movies()
-    if(recommender_type == 'Random'):
-        recs = recommend_random(k = n_movie_recommendations)
-    elif(recommender_type == 'MostPopular'):
-        recs = recommend_most_popular(k = n_movie_recommendations)
-    elif(recommender_type == 'NMF'):
-        R = create_R_matrix()
-        model = create_model(R, n_components=55, overwrite=False)
-        recs = recommend_nmf(user_rating, model, R.shape[1], k = n_movie_recommendations)
-    else:
-        recs = recommend_most_popular(n_movie_recommendations)
-
     recommended_movie_list = ""
-    for movie_index, movie in enumerate(recs):
-        recommended_movie_list += (f"  \n  {movie_index + 1}. {movie}  \n  ")
+
+    if len(user_rating.values()) != 0:
+        if(recommender_type == 'Random'):
+            recs = recommend_random(k = n_movie_recommendations)
+        elif(recommender_type == 'MostPopular'):
+            recs = recommend_most_popular(k = n_movie_recommendations)
+        elif(recommender_type == 'NMF'):
+            R = create_R_matrix()
+            model = create_model(R, n_components=55, overwrite=False)
+            recs = recommend_nmf(user_rating, model, R.shape[1], k = n_movie_recommendations)
+        else:
+            recs = recommend_most_popular(n_movie_recommendations)
+
+        for movie_index, movie in enumerate(recs):
+            recommended_movie_list += (f"  \n  {movie_index + 1}. {movie}  \n  ")
 
     current_movies.table(get_movies_df())
     
