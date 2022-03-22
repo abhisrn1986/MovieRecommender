@@ -4,6 +4,10 @@ import pandas as pd
 import plotly.express as px
 import seaborn as sns
 import streamlit as st
+import imdb
+
+# create an instance of the Cinemagoer class
+cinemagoer = imdb.Cinemagoer()
 
 from recommender import recommend_most_popular, recommend_nmf, recommend_random
 from utils import create_R_matrix, create_model, movies
@@ -72,11 +76,25 @@ if submit:
         else:
             recs = recommend_most_popular(n_movie_recommendations)
 
+        
+        recommended_movies.markdown(f"""## Recommended Movies Using {recommender_type}: """)
+
         for movie_index, movie in enumerate(recs):
-            recommended_movie_list += (f"  \n  {movie_index + 1}. {movie}  \n  ")
+
+            movie_info = cinemagoer.search_movie(movie)
+            movie_url = ""
+            if len(movie_info) > 0:
+                movie_url = cinemagoer.get_imdbURL(movie_info[0])
+                movie_cover_url = cinemagoer.get_movie(movie_info[0].movieID).data['cover url']
+            # recommended_movie_list += (f"  \n  {movie_index + 1}. [{movie}]({movie_url})  \n  ")
+            st.markdown(f"  \n  {movie_index + 1}. [{movie}]({movie_url})  \n  ")
+            st.image(movie_cover_url)
+            
+            
 
     current_movies.table(get_movies_df())
     
-    recommended_movies.markdown(f"""## Recommended Movies Using {recommender_type}:  
-    {recommended_movie_list}""")
+    # recommended_movies.markdown(f"""## Recommended Movies Using {recommender_type}:  
+    # {recommended_movie_list}""")
+
 
