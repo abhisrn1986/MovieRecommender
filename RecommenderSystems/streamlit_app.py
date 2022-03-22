@@ -85,10 +85,14 @@ if submit:
             movie_url = ""
             if len(movie_info) > 0:
                 movie_url = cinemagoer.get_imdbURL(movie_info[0])
-                movie_cover_url = cinemagoer.get_movie(movie_info[0].movieID).data['cover url']
+                movie_obj = cinemagoer.get_movie(movie_info[0].movieID)
+                if 'cover url' in movie_obj:
+                    movie_cover_url = cinemagoer.get_movie(movie_info[0].movieID).data['cover url']
+                else :
+                    movie_cover_url = 'https://ia.media-imdb.com/images/M/MV5BMTczNjM0NDY0Ml5BMl5BcG5nXkFtZTgwMTk1MzQ2OTE@._V1_.png'
             # recommended_movie_list += (f"  \n  {movie_index + 1}. [{movie}]({movie_url})  \n  ")
             st.markdown(f"  \n  {movie_index + 1}. [{movie}]({movie_url})  \n  ")
-            st.image(movie_cover_url)
+            st.image(movie_cover_url, width = 100)
             
             
 
