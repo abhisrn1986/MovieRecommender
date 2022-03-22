@@ -22,7 +22,13 @@ def get_movies_df() :
     movie_rating_list = {"Movie Title" : get_movies().keys(), "Rating" : get_movies().values() }
     return pd.DataFrame(movie_rating_list)
 
-
+def create_links_markdown(imdb_objs) :
+    list_imdb_links = ""
+    for element in imdb_objs:
+        url = cinemagoer.get_imdbURL(element)
+        name = element['name']
+        list_imdb_links += f'[{name}]({url}), '
+    return list_imdb_links
 
 movies_list=movies['title'].tolist()
 
@@ -31,7 +37,7 @@ main_form = st.form(key='my-form')
 recommender_type = main_form.selectbox(
      'Movie Recommender Type',
      ('NMF', 'MostPopular', 'Random'))
-n_movie_recommendations = main_form.number_input('Number of Recommendations', value = 0)
+n_movie_recommendations = main_form.number_input('Number of Recommendations', value = 5)
 selected_movie = main_form.selectbox(
         'Movie', tuple(movies_list))
 movie_rating = main_form.slider(label='Rating', min_value=1, max_value=5, key=4)
@@ -83,22 +89,43 @@ if submit:
 
             movie_info = cinemagoer.search_movie(movie)
             movie_url = ""
+            movie_summary = "No Summary"
+            movie_director = "Unknown"
+            movie_cast = "Unknown"
+            movie_cover_url = 'https://ia.media-imdb.com/images/M/MV5BMTczNjM0NDY0Ml5BMl5BcG5nXkFtZTgwMTk1MzQ2OTE@._V1_.png'
             if len(movie_info) > 0:
                 movie_url = cinemagoer.get_imdbURL(movie_info[0])
                 movie_obj = cinemagoer.get_movie(movie_info[0].movieID)
+                movie_genre = movie_obj['genre']
                 if 'cover url' in movie_obj:
                     movie_cover_url = cinemagoer.get_movie(movie_info[0].movieID).data['cover url']
-                else :
-                    movie_cover_url = 'https://ia.media-imdb.com/images/M/MV5BMTczNjM0NDY0Ml5BMl5BcG5nXkFtZTgwMTk1MzQ2OTE@._V1_.png'
-            # recommended_movie_list += (f"  \n  {movie_index + 1}. [{movie}]({movie_url})  \n  ")
+                if 'plot' in movie_obj:
+                    movie_summary = movie_obj['plot'][0]
+                # else :
+                #     movie_summary = "No Summary"
+                if 'director' in movie_obj:
+                    movie_director = create_links_markdown(movie_obj['director'])
+                if 'cast' in movie_obj:
+                    movie_cast = create_links_markdown(movie_obj['cast'])
+
+            # st.image(movie_cover_url, width = 100)
+            
             st.markdown(f"  \n  {movie_index + 1}. [{movie}]({movie_url})  \n  ")
-            st.image(movie_cover_url, width = 100)
-            
-            
+            st.markdown(f'''
+            <a href="{movie_url}">
+                <img src="{movie_cover_url}" width="100" height="150"/>
+            </a>''',
+            unsafe_allow_html=True
+            )
+            st.markdown(f'  \n  Genre : {movie_genre}')
+            st.markdown(f'  \n  Summary : {movie_summary}')
+            st.markdown(f'  \n  Director : {movie_director}')
+            st.markdown(f'  \n  Cast : {movie_cast}')
+
+            st.markdown("#")
+            st.markdown("#")
+      
 
     current_movies.table(get_movies_df())
-    
-    # recommended_movies.markdown(f"""## Recommended Movies Using {recommender_type}:  
-    # {recommended_movie_list}""")
 
 
