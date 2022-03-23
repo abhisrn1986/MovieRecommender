@@ -5,7 +5,7 @@ all algorithms return a list of movieids
 
 import pandas as pd
 import random
-from utils import movies, ratings, create_user_vector, lookup_movieId
+from utils import movies, ratings, create_user_vector, lookup_movieId, create_R_matrix, create_model
 from scipy.sparse import csr_matrix
 
 def recommend_random(k=10):
@@ -28,7 +28,7 @@ def recommend_most_popular(k=10):
 def recommend_with_user_similarity(user_item_matrix, user_rating, k=5):
     pass
 
-def recommend_nmf(query, model, n_matrix_cols, k=10):
+def recommend_nmf_transform(query, model, n_matrix_cols, k=10):
     """
     Filters and recommends the top k movies for any given input query based on a trained NMF model.
     Returns a list of k movie ids.
@@ -49,4 +49,10 @@ def recommend_nmf(query, model, n_matrix_cols, k=10):
     recommendations=scores.head(k).index
     recommendations_df=movies.set_index("movieId").loc[recommendations]['title']
     return recommendations_df
+
+def recommend_nmf(user_rating, k = 10) :
+    R = create_R_matrix()
+    model = create_model(R, n_components=55, overwrite=False)
+    return recommend_nmf_transform(user_rating, model, R.shape[1], k)
+
 

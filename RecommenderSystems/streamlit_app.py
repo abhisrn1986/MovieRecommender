@@ -46,7 +46,7 @@ if __name__ == '__main__':
     recommender_type = main_form.selectbox(
         'Movie Recommender Type',
         ('NMF', 'MostPopular', 'Random'))
-    n_movie_recommendations = main_form.number_input('Number of Recommendations', value = 5)
+    n_movie_recommendations = main_form.number_input('Number of Recommendations', value = 8)
     selected_movie = main_form.selectbox('Movie', tuple(movies_list))
     movie_rating = main_form.slider(label='Rating', min_value=1, max_value=5, key=4)
 
@@ -91,9 +91,10 @@ if __name__ == '__main__':
             recs = recommend_most_popular(k = n_movie_recommendations)
         elif(recommender_type == 'NMF'):
             if len(user_rating.values()) != 0:
-                R = create_R_matrix()
-                model = create_model(R, n_components=55, overwrite=False)
-                recs = recommend_nmf(user_rating, model, R.shape[1], k = n_movie_recommendations)
+                # R = create_R_matrix()
+                # model = create_model(R, n_components=55, overwrite=False)
+                # recs = recommend_nmf(user_rating, model, R.shape[1], k = n_movie_recommendations)
+                recs = recommend_nmf(user_rating, k = n_movie_recommendations)
             else:
                 recs = []
         else:
@@ -128,9 +129,9 @@ if __name__ == '__main__':
 
                 # These conditions are needed because some times imdb doesn't
                 # have some realted imformation for a movie
-                if 'genre' in movie_obj:
-                    movie_genre = movie_obj['genre']
-                if 'cover url' in movie_obj:
+                # if 'genre' in movie_obj:
+                movie_genre = movie_obj['genre']
+                if 'cover url' in movie_obj.data:
                     movie_cover_url = movie_obj.data['cover url']
                 if 'plot' in movie_obj:
                     movie_summary = movie_obj['plot'][0]
