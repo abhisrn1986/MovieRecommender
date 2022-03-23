@@ -75,8 +75,6 @@ if __name__ == '__main__':
         get_movies().clear()
         current_movies.table(get_movies_df())
         
-
-
     if submit:
 
         current_movies.table(get_movies_df())
